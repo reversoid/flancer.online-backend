@@ -19,7 +19,7 @@ export class OrdersService {
         return this.ordersServiceDB.getOrders(fromDate && new Date (fromDate), limit && Number(limit));
     }
 
-    createOrder(orderData: RawOrder) {        
+    createOrder(orderData: CreateOrderDto) {        
         return this.ordersServiceDB.createOrder({...orderData});
     }
 }

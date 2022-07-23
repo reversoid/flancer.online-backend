@@ -12,7 +12,7 @@ export class OrdersController {
     }
 
     @Post()
-    createOrder(@Body() orderData: RawOrder) {
+    createOrder(@Body() orderData: CreateOrderDto) {
         return this.ordersService.createOrder(orderData);
     }
 

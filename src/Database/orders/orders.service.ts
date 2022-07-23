@@ -1,9 +1,8 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Order, OrderDocument } from '../Schemas/order.schema';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { CreateOrderDto } from 'src/Dto/CreateOrder.dto';
-import { Competence } from '../Schemas/competence.schema';
 
 @Injectable()
 // TODO guess something about naming of db services and server services
@@ -18,7 +17,7 @@ export class OrdersService {
      */
     async getOrders(
         fromDate: Date = new Date("2000-01-01T00:00:00Z"),
-        limit: number = 100
+        limit = 20
     ) {
         try {
             let orders = await this.orderModel.find()
@@ -31,7 +30,6 @@ export class OrdersService {
             
             const [exists, startsFrom] = this._proceedNextPage(orders, limit)            
 
-            // delete last element if we have more than limit number elements
             if (orders.length > limit) {
                 orders = orders.slice(0, orders.length - 1)
             }

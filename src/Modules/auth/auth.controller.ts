@@ -6,29 +6,28 @@ import { LoginUserDto } from 'src/Dto/LoginUser.dto';
 
 @Controller('auth')
 export class AuthController {
-    constructor(
-        private readonly authService: AuthService) { }
+  constructor(private readonly authService: AuthService) {}
 
-    @Post('registration')
-    registration(@Body() userData: CreateUserDto): any {
-        return this.authService.registration(userData);
-    }
+  @Post('registration')
+  registration(@Body() userData: CreateUserDto): any {
+    return this.authService.registration(userData);
+  }
 
-    @Post('login')
-    login(@Body() userData: LoginUserDto): any {
-        return this.authService.login(userData);
-    }
+  @Post('login')
+  login(@Body() userData: LoginUserDto): any {
+    return this.authService.login(userData);
+  }
 
-    @Post('logout')
-    logout(): any {
-        return this.authService.logout();
-    }
+  @Post('logout')
+  logout(): any {
+    return this.authService.logout();
+  }
 
-    // just testing guards
-    // TODO delete it later
-    @UseGuards(JwtAuthGuard)
-    @Post('protected')
-    protected(): any {
-        return this.authService.protected();
-    }
+  // just testing guards
+  // TODO delete it later
+  @UseGuards(JwtAuthGuard)
+  @Post('protected')
+  protected(): any {
+    return this.authService.protected();
+  }
 }
