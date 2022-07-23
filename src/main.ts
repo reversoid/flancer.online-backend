@@ -18,11 +18,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.setGlobalPrefix('api');
   setupSwagger(app);
-  app.useGlobalPipes(
-    new ValidationPipe({
-      disableErrorMessages: true,
-    }),
-  );
+  app.useGlobalPipes(new ValidationPipe());
   await app.listen(PORT);
 }
 bootstrap();

@@ -34,7 +34,11 @@ export class AuthService {
     logout(): any {
         return 'you logged out'
     }
-    
+
+    getUsers() {
+        return this.userService.getUsers();
+    }
+
     protected(): any {
         return 'hi this is protected section'
     }

@@ -57,4 +57,12 @@ export class UserService {
             throw error;
         }
     }
+
+    async getUsers() {
+        try {
+            return await this.userModel.find();
+        } catch (error) {
+            throw error;
+        }
+    }
 }
