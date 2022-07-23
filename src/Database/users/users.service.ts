@@ -43,7 +43,7 @@ export class UserService {
             throw error;
         }
     }
-    async _findOne(filter: Object | Function): Promise<UserDocument> {
+    async _findOne(filter: any): Promise<UserDocument> {
         try {
             return await this.userModel.findOne(filter);
         } catch (error) {

@@ -7,7 +7,7 @@ import { CreateOrderDto } from 'src/Dto/CreateOrder.dto';
 @Injectable()
 // TODO guess something about naming of db services and server services
 export class OrdersService {
-    constructor(@InjectModel(Order.name) private orderModel: Model<OrderDocument>) { };
+    constructor(@InjectModel(Order.name) private orderModel: Model<OrderDocument>) { }
 
     /**
      * This function returns orders with pagination based on creation date.
