@@ -21,19 +21,16 @@ export class AuthService {
     _userMetadata: IUserMetadata,
   ) {
     const user = await this.userService.registration(userData);
-    const tokens = await this.tokenService.getTokens(user._id, _userMetadata);
+    const tokens = await this.tokenService.createTokens(user._id, _userMetadata);
 
     return tokens;
   }
 
-  // TODO create type of access_token object!
-  async login(userData: LoginUserDto): Promise<{ access_token: string }> {
+  async login(userData: LoginUserDto) {
     const user = await this.userService.login(userData);
 
-    const payload = { email: user.email, id: user._id };
-    return {
-      access_token: this.jwtService.sign(payload),
-    };
+    const tokens = await this.tokenService.setNewTokens(user._id);
+    return tokens;
   }
 
   logout(): any {
