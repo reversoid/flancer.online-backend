@@ -5,10 +5,11 @@ import { Model } from 'mongoose';
 import { CreateUserDto } from '../../Dto/CreateUser.dto';
 import { LoginUserDto } from '../../Dto/LoginUser.dto';
 import { User, UserDocument } from '../Schemas/user.schema';
+import { TokenService } from './token.service';
 
 @Injectable()
 export class UserService {
-    constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
+    constructor(@InjectModel(User.name) private userModel: Model<UserDocument>, private _tokenSerivce: TokenService) {}
 
     async registration(userData: CreateUserDto): Promise<UserDocument> {
         try {
@@ -43,6 +44,14 @@ export class UserService {
             throw error;
         }
     }
+    async getUsers() {
+        try {
+            return await this.userModel.find();
+        } catch (error) {
+            throw error;
+        }
+    }
+
     async _findOne(filter: any): Promise<UserDocument> {
         try {
             return await this.userModel.findOne(filter);
@@ -50,6 +59,7 @@ export class UserService {
             throw error;
         }
     }
+
     async _createUser(userData: CreateUserDto): Promise<UserDocument> {
         try {
             return await this.userModel.create(userData);
@@ -58,11 +68,5 @@ export class UserService {
         }
     }
 
-    async getUsers() {
-        try {
-            return await this.userModel.find();
-        } catch (error) {
-            throw error;
-        }
-    }
+    
 }
