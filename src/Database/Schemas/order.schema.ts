@@ -1,7 +1,9 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import mongoose from "mongoose";
 import { Document } from 'mongoose';
-import { Competence, CompetenceSchema } from "./competence.schema";
+import { Competence } from "./competence.schema";
+import { Price } from "./price.schema";
+import { TimePeriod } from "./timeperiod.schema";
 
 export type OrderDocument = Order & Document;
 
@@ -16,18 +18,16 @@ export class Order {
     @Prop({required: true})
     text: string;
 
-    // TODO use specific type later
-    @Prop({required: true})
-    competencies: Array<string>;
+    @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Competence' }] })
+    competencies: Competence[];
+
+    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Price' })
+    price: Price;
+
+    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'TimePeriod' })
+    timeperiod: TimePeriod;
 
     createdAt: Date;
-
-    // TODO make special type for price
-    // @Prop({required: true, type: {}})
-    // price: {from?: number, to?: number};
-
-    // @Prop({required: false})
-    // timePeriod: {from?: Date, to?: Date};
 }
 
 export const OrderSchema = SchemaFactory.createForClass(Order)

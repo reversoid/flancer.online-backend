@@ -5,9 +5,6 @@ export type CompetenceDocument = Competence & Document;
 
 @Schema()
 export class Competence {
-    constructor(value: string) {
-        this.value = value;
-    }
     @Prop({required: true})
     value: string;
 }
