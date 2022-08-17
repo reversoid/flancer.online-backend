@@ -2,6 +2,6 @@
 
 This is my project for freelance market I build on my own.
 
-This is frontend repository.
+This is backend repository.
 
 More info is coming..
