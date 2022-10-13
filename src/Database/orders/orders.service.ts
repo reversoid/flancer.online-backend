@@ -15,9 +15,9 @@ export class OrdersService {
 
   /**
    * This function returns orders with pagination based on creation date.
-   * @param fromDate Including this date orders will be given.
+   * @param fromDate From this date orders will be given.
    * @param limit Maximum number of orders will be given.
-   * @default limit 100
+   * @default limit 20
    */
   async getOrders(
     fromDate: Date = new Date('2000-01-01T00:00:00Z'),
@@ -37,7 +37,7 @@ export class OrdersService {
       const [exists, startsFrom] = this._proceedNextPage(orders, limit);
 
       if (orders.length > limit) {
-        orders = orders.slice(0, orders.length - 1);
+        orders = orders.slice(0, limit);
       }
 
       return {
