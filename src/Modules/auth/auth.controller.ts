@@ -21,10 +21,10 @@ export class AuthController {
   ) {}
 
   @Post('registration')
-  @UsePipes(new ValidationPipe({ forbidNonWhitelisted: true, whitelist: true }))
+  @UsePipes(new ValidationPipe())
   async registration(
-    @Body() userData: RegisterDTO,
     @RealIP() ip: string,
+    @Body() userData: RegisterDTO,
     @Res({ passthrough: true }) res: Response,
   ) {
     const { id } = await this.authService.register(userData);

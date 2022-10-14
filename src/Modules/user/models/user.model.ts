@@ -6,6 +6,7 @@ export interface IUser {
   email: string;
   passwordHash: string;
   name: IName;
+  phone: string;
 }
 
 export class IName {first: string; last: string;}
@@ -16,7 +17,7 @@ export class User extends Document implements IUser {
   email: string;
 
   @Prop({ required: true })
-  password: string;
+  passwordHash: string;
 
   @Prop({ required: true })
   phone: string;
@@ -26,9 +27,6 @@ export class User extends Document implements IUser {
     first: string;
     last: string;
   };
-
-  @Prop({ required: true })
-  passwordHash: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

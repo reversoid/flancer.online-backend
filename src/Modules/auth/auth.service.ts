@@ -16,6 +16,9 @@ export class RegisterDTO {
 
   @IsNotEmpty()
   password: string;
+
+  @IsNotEmpty()
+  phone: string;
 }
 
 export class LoginUserDTO {
@@ -33,7 +36,7 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  public async register({ email, name, password }: RegisterDTO) {
+  public async register({ email, name, password, phone }: RegisterDTO) {
     const existingUser = await this.userRepository.findUserByEmail(email);
     if (existingUser) {
       throw new HttpException('User already exists', 409);
@@ -43,6 +46,7 @@ export class AuthService {
       email,
       name,
       passwordHash: '',
+      phone,
     }).setPassword(password);
 
     const newUser = await this.userRepository.createUser(userEntity);

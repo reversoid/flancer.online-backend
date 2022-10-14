@@ -7,12 +7,14 @@ export class UserEntity implements IUser {
   email: string;
   passwordHash: string;
   name: { first: string; last: string };
+  phone: string;
 
   constructor(user: IUser) {
     this._id = user._id;
     this.email = user.email;
     this.passwordHash = user.passwordHash;
     this.name = { ...user.name };
+    this.phone = user.phone;
   }
 
   public async setPassword(password: string) {
