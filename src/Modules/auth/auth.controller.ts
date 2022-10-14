@@ -71,6 +71,7 @@ export class AuthController {
     @Req() request: Request,
   ) {
     const jwt = request.cookies['refresh_token'];
+    
     const {access, refresh} = await this.authService.updateTokens(jwt);
 
     res.cookie('access_token', access, ACCESS_TOKEN_OPTIONS);

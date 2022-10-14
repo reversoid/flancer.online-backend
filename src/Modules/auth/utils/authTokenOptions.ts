@@ -17,5 +17,5 @@ export const ACCESS_TOKEN_OPTIONS = {
 export const REFRESH_TOKEN_OPTIONS = {
   httpOnly: true,
   maxAge: DateService.getDaysInMs(60),
-  path: '/api/orders',
+  path: '/api/auth/refresh',
 };

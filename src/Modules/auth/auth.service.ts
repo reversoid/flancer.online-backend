@@ -109,7 +109,7 @@ export class AuthService {
       }
       return this.getTokens(id);
     } catch (error) {
-      throw new HttpException('User is unauthorized', 401);
+      throw new HttpException('User is not authorized', 401);
     }
   }
 }
