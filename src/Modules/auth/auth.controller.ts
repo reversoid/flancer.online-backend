@@ -72,13 +72,17 @@ export class AuthController {
   ) {
     const jwt = request.cookies['refresh_token'];
     
-    const {access, refresh} = await this.authService.updateTokens(jwt);
-
-    res.cookie('access_token', access, ACCESS_TOKEN_OPTIONS);
-    res.cookie('refresh_token', refresh, REFRESH_TOKEN_OPTIONS);
-
-    return {
-      success: true,
-    };
+    try {
+      const {access, refresh} = await this.authService.updateTokens(jwt);
+      res.cookie('access_token', access, ACCESS_TOKEN_OPTIONS);
+      res.cookie('refresh_token', refresh, REFRESH_TOKEN_OPTIONS);
+  
+      return {
+        success: true,
+      };
+    } catch (error) {
+      res.clearCookie('access_token');
+      res.clearCookie('refresh_token');
+    }
   }
 }
