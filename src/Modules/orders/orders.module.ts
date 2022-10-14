@@ -4,6 +4,7 @@ import { OrdersController } from './orders.controller';
 import { OrderRepository } from './repositories/order.repository';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Order, OrderSchema } from './models/order.model';
+import { PassportModule } from '@nestjs/passport';
 
 @Module({
   providers: [OrdersService, OrderRepository],
@@ -16,6 +17,6 @@ import { Order, OrderSchema } from './models/order.model';
         schema: OrderSchema,
       }
     ]
-  )],
+  ), PassportModule],
 })
 export class OrdersModule {}

@@ -1,5 +1,6 @@
-import { Body, Controller, Get, Post, Query, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { OrdersService } from './orders.service';
 import { CreateOrderDTO } from './repositories/order.repository';
 
@@ -8,12 +9,13 @@ import { CreateOrderDTO } from './repositories/order.repository';
 export class OrdersController {
     constructor (private readonly ordersService: OrdersService) { }
 
+    @UseGuards(JwtAuthGuard)
     @Get()
     getOrders(@Query() {fromDate, limit}: {fromDate: string, limit: string}) {        
         return this.ordersService.getOrders(fromDate, limit);
     }
 
-    // TODO ADD AUTH MIDDLEWARE
+    @UseGuards(JwtAuthGuard)
     @Post()
     @UsePipes(new ValidationPipe())
     createOrder(@Body() orderData: CreateOrderDTO) {
