@@ -1,52 +1,38 @@
 import {
   Body,
   Controller,
-  Get,
   Post,
+  Req,
   Res,
-  UseGuards,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { CreateUserDto } from 'src/Dto/CreateUser.dto';
-import { JwtAuthGuard } from './jwt-auth.guard';
-import { AuthService } from './auth.service';
-import { LoginUserDto } from 'src/Dto/LoginUser.dto';
+import { AuthService, LoginUserDTO, RegisterDTO } from './auth.service';
 import { ApiTags } from '@nestjs/swagger';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { RealIP } from 'nestjs-real-ip';
-import { TokenService } from 'src/Database/users/token.service';
-import { BodyRefresh } from 'src/Dto/BodyRefresh.dto';
+import { ACCESS_TOKEN_OPTIONS, REFRESH_TOKEN_OPTIONS } from './utils/authTokenOptions';
 
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
-    private readonly tokenService: TokenService,
   ) {}
 
   @Post('registration')
   @UsePipes(new ValidationPipe({ forbidNonWhitelisted: true, whitelist: true }))
   async registration(
-    @Body() userData: CreateUserDto,
+    @Body() userData: RegisterDTO,
     @RealIP() ip: string,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const { access, refresh } = await this.authService.registration(userData, {
-      ip,
-    });
-    res.cookie('access_token', access, {
-      httpOnly: true,
-      maxAge: 1000 * 60 * 60 * 15,
-      path: '/api/orders',
-    });
+    const { id } = await this.authService.register(userData);
+    const { access, refresh } = await this.authService.getTokens(id);
 
-    res.cookie('refresh_token', refresh, {
-      httpOnly: true,
-      maxAge: 1000 * 60 * 60 * 60 * 24 * 60,
-      path: '/api/auth/refresh',
-    });
+    res.cookie('access_token', access, ACCESS_TOKEN_OPTIONS);
+
+    res.cookie('refresh_token', refresh, REFRESH_TOKEN_OPTIONS);
 
     return { success: true };
   }
@@ -54,67 +40,45 @@ export class AuthController {
   @Post('login')
   @UsePipes(new ValidationPipe({ transform: true }))
   async login(
-    @Body() userData: LoginUserDto,
+    @Body() { emailOrPhone, password }: LoginUserDTO,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const { access, refresh } = await this.authService.login(userData);
-    res.cookie('access_token', access, {
-      httpOnly: true,
-      maxAge: 1000 * 60 * 60 * 15,
-      path: '/api/orders',
-    });
+    const { id } =  await this.authService.validateUser(emailOrPhone, password);
+    const { access, refresh } = await this.authService.getTokens(id);
 
-    res.cookie('refresh_token', refresh, {
-      httpOnly: true,
-      maxAge: 1000 * 60 * 60 * 60 * 24 * 60,
-      path: '/api/auth/refresh',
-    });
+    res.cookie('access_token', access, ACCESS_TOKEN_OPTIONS);
+
+    res.cookie('refresh_token', refresh, REFRESH_TOKEN_OPTIONS);
     return {
       success: true,
     };
   }
 
-  @Get('users')
-  getUsers() {
-    return this.authService.getUsers();
-  }
-
   @Post('logout')
-  logout(): any {
-    return this.authService.logout();
+  async logout(
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    res.clearCookie('access_token');
+    res.clearCookie('refresh_token');
+    return {
+      success: true,
+    };
   }
 
   @Post('refresh')
   @UsePipes(new ValidationPipe({ transform: true }))
   async refresh(
-    @Body() body: BodyRefresh,
     @Res({ passthrough: true }) res: Response,
+    @Req() request: Request,
   ) {
-    console.log(body.id);
-    const { access, refresh } = await this.tokenService.updateTokens(body.id);
+    const jwt = request.cookies['refresh_token'];
+    const {access, refresh} = await this.authService.updateTokens(jwt);
 
-    res.cookie('access_token', access, {
-      httpOnly: true,
-      maxAge: 1000 * 60 * 60 * 15,
-      path: '/api/orders',
-    });
-
-    res.cookie('refresh_token', refresh, {
-      httpOnly: true,
-      maxAge: 1000 * 60 * 60 * 60 * 24 * 60,
-      path: '/api/auth/refresh',
-    });
+    res.cookie('access_token', access, ACCESS_TOKEN_OPTIONS);
+    res.cookie('refresh_token', refresh, REFRESH_TOKEN_OPTIONS);
 
     return {
       success: true,
     };
-  }
-
-  // just testing guards
-  // TODO delete it later
-  @UseGuards(JwtAuthGuard)
-  @Post('protected')
-  protected(): any {
-    return this.authService.protected();
   }
 }

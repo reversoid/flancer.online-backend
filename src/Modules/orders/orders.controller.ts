@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Post, Query, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { CreateOrderDto } from 'src/Dto/CreateOrder.dto';
 import { OrdersService } from './orders.service';
+import { CreateOrderDTO } from './repositories/order.repository';
 
 @ApiTags('Orders')
 @Controller('orders')
@@ -15,8 +15,7 @@ export class OrdersController {
 
     @Post()
     @UsePipes(new ValidationPipe({ transform: true }))
-    createOrder(@Body() orderData: CreateOrderDto) {
+    createOrder(@Body() orderData: CreateOrderDTO) {
         return this.ordersService.createOrder(orderData);
     }
-
 }
