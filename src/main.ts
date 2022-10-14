@@ -8,7 +8,7 @@ function setupSwagger(app: INestApplication) {
   const config = new DocumentBuilder()
     .setTitle('Flancer.online')
     .setDescription('Description of flancer backend')
-    .setVersion('1.0')
+    .setVersion('0.1')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
