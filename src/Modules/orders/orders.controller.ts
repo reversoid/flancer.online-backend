@@ -14,8 +14,10 @@ export class OrdersController {
     }
 
     @Post()
-    @UsePipes(new ValidationPipe({ transform: true }))
+    @UsePipes(new ValidationPipe())
     createOrder(@Body() orderData: CreateOrderDTO) {
+        console.log('hey');
+        
         return this.ordersService.createOrder(orderData);
     }
 }

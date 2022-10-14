@@ -2,13 +2,25 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { NumericFromTo, Order } from '../models/order.model';
 import { Model } from 'mongoose';
+import { IsNotEmpty } from 'class-validator';
 
-export interface CreateOrderDTO {
+export class CreateOrderDTO {
+  @IsNotEmpty()
   userID: string;
+  
+  @IsNotEmpty()
   title: string;
+
+  @IsNotEmpty()
   text: string;
+
+  @IsNotEmpty()
   competencies: string[];
+
+  @IsNotEmpty()
   price: NumericFromTo;
+
+  @IsNotEmpty()
   timeperiod: NumericFromTo | null;
 }
 
