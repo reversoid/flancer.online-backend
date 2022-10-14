@@ -38,7 +38,7 @@ export class AuthController {
   }
 
   @Post('login')
-  @UsePipes(new ValidationPipe({ transform: true }))
+  @UsePipes(new ValidationPipe())
   async login(
     @Body() { emailOrPhone, password }: LoginUserDTO,
     @Res({ passthrough: true }) res: Response,
@@ -66,7 +66,6 @@ export class AuthController {
   }
 
   @Post('refresh')
-  @UsePipes(new ValidationPipe({ transform: true }))
   async refresh(
     @Res({ passthrough: true }) res: Response,
     @Req() request: Request,

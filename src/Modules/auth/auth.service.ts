@@ -2,18 +2,27 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserRepository } from '../user/repositories/user.repository';
 import { UserEntity } from '../user/entities/user.entity';
+import { IsNotEmpty } from 'class-validator';
 
-export interface RegisterDTO {
+export class RegisterDTO {
+  @IsNotEmpty()
   email: string;
+
+  @IsNotEmpty()
   name: {
     first: string;
     last: string;
   };
+
+  @IsNotEmpty()
   password: string;
 }
 
-export interface LoginUserDTO {
+export class LoginUserDTO {
+  @IsNotEmpty()
   emailOrPhone: string;
+
+  @IsNotEmpty()
   password: string;
 }
 

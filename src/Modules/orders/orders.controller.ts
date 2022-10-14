@@ -13,11 +13,10 @@ export class OrdersController {
         return this.ordersService.getOrders(fromDate, limit);
     }
 
+    // TODO ADD AUTH MIDDLEWARE
     @Post()
     @UsePipes(new ValidationPipe())
     createOrder(@Body() orderData: CreateOrderDTO) {
-        console.log('hey');
-        
         return this.ordersService.createOrder(orderData);
     }
 }
