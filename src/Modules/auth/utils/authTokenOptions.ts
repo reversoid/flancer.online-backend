@@ -1,6 +1,6 @@
 class DateService {
   static getDaysInMs(days: number) {
-    return 1000 * 60 * 60 * 60 * 24 * days;
+    return 1000 * 60 * 60  * 24 * days;
   }
 
   static getMinutesInMs(minutes: number) {
