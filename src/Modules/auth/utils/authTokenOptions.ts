@@ -1,3 +1,5 @@
+import { CookieOptions } from "express";
+
 class DateService {
   static getDaysInMs(days: number) {
     return 1000 * 60 * 60  * 24 * days;
@@ -14,7 +16,7 @@ export const ACCESS_TOKEN_OPTIONS = {
   path: '/api/orders',
 };
 
-export const REFRESH_TOKEN_OPTIONS = {
+export const REFRESH_TOKEN_OPTIONS: CookieOptions = {
   httpOnly: true,
   maxAge: DateService.getDaysInMs(60),
   path: '/api/auth/refresh',

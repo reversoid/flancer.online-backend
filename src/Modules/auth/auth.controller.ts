@@ -11,7 +11,7 @@ import { AuthService, LoginUserDTO, RegisterDTO } from './auth.service';
 import { ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 import { RealIP } from 'nestjs-real-ip';
-import { ACCESS_TOKEN_OPTIONS, REFRESH_TOKEN_OPTIONS } from './utils/authTokenOptions';
+import { REFRESH_TOKEN_OPTIONS } from './utils/authTokenOptions';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -30,11 +30,9 @@ export class AuthController {
     const { id } = await this.authService.register(userData);
     const { access, refresh } = await this.authService.getTokens(id);
 
-    res.cookie('access_token', access, ACCESS_TOKEN_OPTIONS);
-
     res.cookie('refresh_token', refresh, REFRESH_TOKEN_OPTIONS);
 
-    return { success: true };
+    return { access_token: access};
   }
 
   @Post('login')
@@ -46,19 +44,16 @@ export class AuthController {
     const { id } =  await this.authService.validateUser(emailOrPhone, password);
     const { access, refresh } = await this.authService.getTokens(id);
 
-    res.cookie('access_token', access, ACCESS_TOKEN_OPTIONS);
-
     res.cookie('refresh_token', refresh, REFRESH_TOKEN_OPTIONS);
-    return {
-      success: true,
-    };
+    
+    return { access_token: access};
   }
 
   @Post('logout')
   async logout(
     @Res({ passthrough: true }) res: Response,
   ) {
-    res.clearCookie('access_token');
+
     res.clearCookie('refresh_token');
     return {
       success: true,
@@ -74,15 +69,15 @@ export class AuthController {
     
     try {
       const {access, refresh} = await this.authService.updateTokens(jwt);
-      res.cookie('access_token', access, ACCESS_TOKEN_OPTIONS);
+
       res.cookie('refresh_token', refresh, REFRESH_TOKEN_OPTIONS);
   
       return {
-        success: true,
+        access_token: access
       };
     } catch (error) {
-      res.clearCookie('access_token');
       res.clearCookie('refresh_token');
+      throw error;
     }
   }
 }
